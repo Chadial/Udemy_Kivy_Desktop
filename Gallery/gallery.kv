@@ -1,0 +1,58 @@
+<GalleryWindow>:
+    id:                 main_win
+    orientation:        "vertical"
+
+    BoxLayout:
+        id:             top_nav
+        size_hint_y:    None
+        height:         35
+        Button:
+            id:             file_trigger
+            text:           'File'
+            size_hint:      (.2, None)
+            height:         30
+            on_release:     file_dropdown.open(self)
+
+            Widget:
+                on_parent:  file_dropdown.dismiss()
+
+                DropDown:
+                    id:     file_dropdown
+                    Button:
+                        id:         open_img
+                        text:       'Open_Image'
+                        size_hint_y:None
+                        height:     30
+                    Button:
+                        id:         open_folder
+                        text:       'Open_Image'
+                        size_hint_y:None
+                        height:     30
+        Label:
+            id:             title
+            text:           "Marcus PhotoViewer"
+            size_hint:      (.6, None)
+            height:         30
+            bold:           True
+        Button:
+            id:             more_trigger
+            text:           'More'
+            size_hint:      (.2, None)
+            height:         30
+            on_release:     more_dropdown.open(self)
+
+            Widget:
+                on_parent:  more_dropdown.dismiss()
+
+                DropDown:
+                    id:     more_dropdown
+                    Button:
+                        id:         open_about
+                        text:       'About'
+                        size_hint_y:None
+                        height:     30
+                    Button:
+                        id:         quit
+                        text:       'Quit'
+                        size_hint_y:None
+                        height:     30
