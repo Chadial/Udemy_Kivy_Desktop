@@ -1,6 +1,27 @@
+#:  import icon kivy.garden.iconfonts.icon
+
+<ImgCard@ToggleButtonBehavior+BoxLayout>:
+    im_source:          ""
+    im_caption:         ""
+    orientation:        "vertical"
+    on_release:           app.root.viewimg(self)
+    Image:
+        source:         root.im_source
+        size_hint_y:    .9
+    Label:
+        text:           root.im_caption
+        size_hint_y:    .1
+
+
 <GalleryWindow>:
     id:                 main_win
     orientation:        "vertical"
+#    canvas.before:
+#        Color:
+#            rgba:       (1, 1, 1, 1)
+#        Rectangle:
+#            pos:        self.pos
+#            size:       self.size
 
     BoxLayout:
         id:             top_nav
@@ -25,7 +46,8 @@
                         height:     30
                     Button:
                         id:         open_folder
-                        text:       'Open_Image'
+                        text:       '%s'%(icon('zmdi-folder-outline', 32))
+                        markup:     True
                         size_hint_y:None
                         height:     30
         Label:
@@ -56,3 +78,14 @@
                         text:       'Quit'
                         size_hint_y:None
                         height:     30
+    RecycleView:
+        id:                         img_base
+        viewclass:                  "ImgCard"
+        RecycleGridLayout:
+            default_size:           (None, 250)
+            default_size_hint:      (1, None)
+            size_hint_y:            None
+            height:                 self.minimum_height
+            spacing:                10
+            #orientation:            "vertical"
+            cols:                   4
