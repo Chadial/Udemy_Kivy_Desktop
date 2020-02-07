@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.modalview import ModalView
@@ -25,8 +26,8 @@ class GalleryWindow(BoxLayout):
         # im = Image(source='imgs/G-Psi.png')
         # self.add_widget(im)
 
-        images = self.get_imgs("imgs")
-        self.show_imgs(images)
+        self.images = self.get_imgs("imgs")
+        self.show_imgs(self.images)
 
     def get_imgs(self, img_path):
         """ Check existance of given path "img_path" and return list "imgs" of all absolute paths of found images """
@@ -56,6 +57,69 @@ class GalleryWindow(BoxLayout):
             base_data.append({"im_source": img, 'im_caption': im_name})
         base.data = base_data
 
+    def next_image(self, instance):
+        """ Implement the next image function to the btn_next button """
+        # print(instance.parent.parent.parent.parent.children[1].children[1].children[0].text) # Traversing exercise
+        images = self.images
+        cur_idx = None
+        last_idx = len(images)-1
+        view_children = instance.parent.parent.parent.children
+        cur_img = None
+        image_container = None
+
+        for child in view_children:
+            if str(child).find('BoxLayout') > -1:
+                image_container = child.children[0]
+                cur_img = image_container.source
+
+        for i, img in enumerate(images):
+            if img == cur_img:
+                cur_idx = i
+
+        if cur_idx != last_idx:
+            nxt_img = images[cur_idx+1]
+        else:
+            nxt_img = images[0]
+
+        image_container.source = nxt_img
+
+    def prev_image(self, instance):
+        """ Implement the previous image function to the btn_prev button """
+        images = self.images
+        cur_idx = None
+        last_idx = len(images)-1
+        view_children = instance.parent.parent.parent.children
+        cur_img = None
+        image_container = None
+
+        for child in view_children:
+            if str(child).find('BoxLayout') > -1:
+                image_container = child.children[0]
+                cur_img = image_container.source
+
+        for i, img in enumerate(images):
+            if img == cur_img:
+                cur_idx = i
+
+        if cur_idx != 0:
+            prev_img = images[cur_idx-1]
+        else:
+            prev_img = images[last_idx]
+
+        image_container.source = prev_img
+
+    # def new_img_name(self, instance):
+    #     new_name = TextInput(hint_text="New Image Name")
+    #     new_name.bind(on_text_validate=self.rename_img)
+    #
+    #     new_name_modal = ViewImage(size_hint=(None, None),
+    #                                size=(400, 50))
+    #     new_name_modal.add_widget(new_name)
+    #     new_name_modal.open()
+
+    # def rename_img(self, instance):
+    #     pass
+
     def viewimg(self, instance):
         """ Generate a ModalView of an clicked image with functional Buttons """
         # print(instance.im_source)
@@ -71,6 +135,10 @@ class GalleryWindow(BoxLayout):
         btn_rename = Button(text='%s' % (icon('zmdi-file', 24)), markup=True)
         btn_effects = Button(text='%s' % (icon('zmdi-blur', 24)), markup=True)
         btn_next = Button(text='%s' % (icon('zmdi-caret-right', 24)), markup=True)
+        # Add bindings to the buttons
+        btn_next.bind(on_release=self.next_image)
+        btn_prev.bind(on_release=self.prev_image)
+        # btn_rename.bind(on_release=self.new_img_name)
         # Add Buttons to BoxLayout image_ops
         image_ops.add_widget(btn_prev)
         image_ops.add_widget(btn_rename)
